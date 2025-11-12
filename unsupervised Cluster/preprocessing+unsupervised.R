@@ -9,10 +9,6 @@ do_scale <- TRUE                                                # Whether to sta
 
 library(ggplot2)
 
-# === Global feature order (for consistent heatmap comparison) ===
-base_df <- read.csv(file.path(out_dir, "red_cleaned.csv"), stringsAsFactors = FALSE)
-global_features <- names(base_df)[sapply(base_df, is.numeric)]
-global_features <- setdiff(global_features, "quality")
 
 
 # ================================================================
@@ -95,6 +91,11 @@ if (dataset_mode %in% c('white','both'))
   process_simple(file.path(data_dir, 'winequality-white.csv'), 'white', out_dir = out_dir, scale = do_scale, seed = seed)
 
 message('Data preprocessing completed.')
+
+# === Global feature order (for consistent heatmap comparison) ===
+base_df <- read.csv(file.path(out_dir, "red_cleaned.csv"), stringsAsFactors = FALSE)
+global_features <- names(base_df)[sapply(base_df, is.numeric)]
+global_features <- setdiff(global_features, "quality")
 
 
 # ================================================================
