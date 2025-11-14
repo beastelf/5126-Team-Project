@@ -19,9 +19,9 @@ import pandas as pd
 nn_in = 13          # 输入维度（你加了两列 type_*，共 13）
 nn_out = 2          # 二分类
 n_hidden = 3
-epochs = 100
-nn_neural = 64
-batch_train = 64
+epochs = 250
+nn_neural = 128
+batch_train = 124
 batch_val = 32
 lr = 1e-4
 seed = 141
@@ -37,6 +37,17 @@ df = pd.concat([origin_white, origin_red], axis=0, ignore_index=True)
 
 X = df.drop(columns=["quality"]).to_numpy(dtype=np.float32)
 y = df['quality'].to_numpy(dtype=np.int64)
+
+
+# origin_white = pd.read_csv("/Users/cin/工程文件/R/5170-Team-Project/Neural_Network/winequality-white-renamed_去重后.csv")
+# # origin_white = pd.read_csv("/Users/cin/工程文件/R/5170-Team-Project/Neural_Network/winequality-red-renamed_去重后.csv")
+# df = pd.DataFrame(origin_white)
+#
+# X = df.drop(columns=["quality"]).to_numpy(dtype=np.float32)
+# y = df['quality'].to_numpy(dtype=np.int64)
+
+
+
 
 # quality 映射成二分类：<=6 为 0， >6 为 1
 y = np.where(y <= 6, 0, 1).astype(np.int64)
@@ -66,16 +77,22 @@ val_loader   = DataLoader(
 # -------------------- 模型 --------------------
 model = nn.Sequential(
     nn.Linear(nn_in, nn_neural),
+    nn.BatchNorm1d(nn_neural),
     nn.ReLU(),
+    nn.Dropout(0.2),
     nn.Linear(nn_neural, nn_neural),
+    nn.BatchNorm1d(nn_neural),
     nn.ReLU(),
+    nn.Dropout(0.2),
     nn.Linear(nn_neural, nn_neural),
+    nn.BatchNorm1d(nn_neural),
     nn.ReLU(),
+    nn.Dropout(0.2),
     nn.Linear(nn_neural, nn_out),
 )
 
 criterion = nn.CrossEntropyLoss()                  # 输入 logits，标签 long
-optimizer = torch.optim.Adam(model.parameters(), lr=lr)
+optimizer = torch.optim.Adam(model.parameters(), lr=lr,weight_decay=5e-3)
 
 # -------------------- 指标/绘图函数 --------------------
 def compute_topk_accuracy(probs_or_logits, y_true, k=3, are_logits=False):
