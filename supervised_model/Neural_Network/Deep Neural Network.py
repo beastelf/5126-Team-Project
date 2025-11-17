@@ -31,65 +31,37 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from torch.utils.data import TensorDataset, DataLoader
 from sklearn.model_selection import train_test_split
-from imblearn.over_sampling import SMOTE
 
 from sklearn.metrics import (
-    classification_report, confusion_matrix,
+    confusion_matrix,
     f1_score, precision_score, recall_score,
-    roc_auc_score, roc_curve, auc,
-    average_precision_score, precision_recall_curve,
-    cohen_kappa_score, matthews_corrcoef,
-    balanced_accuracy_score, log_loss
 )
 import pandas as pd
 
 
-nn_in = 13
+nn_in = 14
 nn_out = 2
-n_hidden = 3
-epochs = 200
+epochs = 5000
 nn_neural = 128
-batch_train = 128
+batch_train = 256
 batch_val = 32
-lr = 4e-4
+lr = 1e-5
 seed = 141
 torch.manual_seed(seed)
 np.random.seed(seed)
 
-# Load both wine datasets and add type indicators
-origin_white = pd.read_csv("/Users/cin/工程文件/R/5170-Team-Project/Neural_Network/winequality-white-renamed_去重后.csv")
-origin_red   = pd.read_csv("/Users/cin/工程文件/R/5170-Team-Project/Neural_Network/winequality-red-renamed_去重后.csv")
-origin_white['type_white'] = 1; origin_white['type_red'] = 0
-origin_red['type_white']   = 0; origin_red['type_red']   = 1
-df = pd.concat([origin_white, origin_red], axis=0, ignore_index=True)
+origin_resample=pd.read_csv("wine_feature_engineered.csv")
+df=pd.DataFrame(origin_resample)
+df=df.drop(columns=["wine_type"])
 
-
-# origin_white = pd.read_csv("/Users/cin/工程文件/R/5170-Team-Project/Neural_Network/winequality-white-renamed_去重后.csv")
-# # origin_white = pd.read_csv("/Users/cin/工程文件/R/5170-Team-Project/Neural_Network/winequality-red-renamed_去重后.csv")
-# df = pd.DataFrame(origin_white)
-#
-# X = df.drop(columns=["quality"]).to_numpy(dtype=np.float32)
-# y = df['quality'].to_numpy(dtype=np.int64)
-
-
-# Extract features and labels
 X = df.drop(columns=["quality"]).to_numpy(dtype=np.float32)
 y = df['quality'].to_numpy(dtype=np.int64)
-
-
-
-
-
 # Convert to binary target (<=6 : 0 , >6 : 1)
-y = np.where(y <= 6, 0, 1).astype(np.int64)
-
+y = np.where(y >= 6, 1, 0).astype(np.int64)
 # Split before normalization to avoid data leakage
 x_train_np, x_test_np, y_train_np, y_test_np = train_test_split(
     X, y, test_size=0.2, stratify=y, random_state=seed
 )
-
-print("Class 0:", np.sum(y == 0))
-print("Class 1:", np.sum(y == 1))
 
 # Standardization based on training statistics
 mean_train = x_train_np.mean(axis=0, keepdims=True)
@@ -133,9 +105,16 @@ optimizer = torch.optim.Adam(model.parameters(), lr=lr, weight_decay=5e-4)
 
 # History storage for training curves
 history = {'train_loss':[], 'val_loss':[], 'train_acc':[], 'val_acc':[], 'val_f1':[]}
-
+#Early stop
+last_acc=0
+early_stop=0
+stop_epoch=0
 # Training loop
 for ep in range(epochs):
+    #if the accuracy does not increase in 300 epoches, training stop
+    if early_stop>=300:
+        stop_epoch=ep-1
+        break
     model.train()
     train_running_loss, train_correct, n_train = 0.0, 0, 0
 
@@ -179,6 +158,11 @@ for ep in range(epochs):
     all_labels = np.array(all_labels)
     all_preds  = np.array(all_preds)
     all_probs  = torch.cat(prob_list, dim=0).numpy()
+    if(last_acc<=val_acc):
+        last_acc = val_acc
+        early_stop = 0
+    else:
+        early_stop+=1
 
     f1_macro = f1_score(all_labels, all_preds, average='macro')
 
@@ -188,8 +172,8 @@ for ep in range(epochs):
     history['val_acc'].append(val_acc)
     history['val_f1'].append(f1_macro)
 
-    # print(f"Epoch {ep:03d} | TrainLoss={train_loss:.4f} | ValLoss={val_loss:.4f} "
-    #       f"| TrainAcc={train_acc:.4f} | ValAcc={val_acc:.4f} | Macro-F1={f1_macro:.4f}")
+    print(f"Epoch {ep:03d} | TrainLoss={train_loss:.4f} | ValLoss={val_loss:.4f} "
+          f"| TrainAcc={train_acc:.4f} | ValAcc={val_acc:.4f} | Macro-F1={f1_macro:.4f}")
 
 # Final evaluation on full test set
 model.eval()
@@ -209,7 +193,7 @@ recall = recall_score(y_val, pred)
 f1 = f1_score(y_val, pred)
 
 print("The Validation Accuracy is: ", Accuracy)
-print("The Confusion Matrix is: ", cm)
+print("The Confusion Matrix is: ", cm,"\n")
 print("The Precision is: ", precision)
 print("The Recall is: ", recall)
 print("The F1 is: ", f1)
