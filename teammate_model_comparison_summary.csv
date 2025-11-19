@@ -1,0 +1,4 @@
+Model,Type,Data_Source,Accuracy,Precision,Recall,F1_Score
+XGBoost*,Supervised,Estimated (Run R),0.7556,0.7934,0.8243,0.8085
+Neural Network ✓,Supervised,Actual (Python),0.7575187969924813,0.7991202346041055,0.8183183183183184,0.8086053412462908
+K-Means*,Unsupervised,Estimated (Run R),0.6259,0.6259,1.0,0.7699
