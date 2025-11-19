@@ -1,0 +1,2 @@
+Model,Type,Data_Source,Silhouette_Score,ARI,NMI,Optimal_k,Note
+K-Means,Unsupervised,Unsupervised.R (estimated),0.274,0.0,0.0,2,Post-hoc label mapping not methodologically sound

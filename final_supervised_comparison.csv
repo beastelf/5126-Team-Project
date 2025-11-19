@@ -1,0 +1,3 @@
+Model,Type,Data_Source,Accuracy,Precision,Recall,F1_Score
+XGBoost,Supervised,FE+Supervised Tree models.R,0.7568973,0.790655,0.8325,0.8108208
+Neural Network,Supervised,Deep Neural Network.py,0.7575187969924813,0.7991202346041055,0.8183183183183184,0.8086053412462908
