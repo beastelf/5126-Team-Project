@@ -1,0 +1,15 @@
+Criterion,XGBoost,Neural Network,K-Means,Winner
+F1 Score (Performance),81.08% ⭐,80.86%,N/A (Different objective),XGBoost
+Accuracy,75.69%,75.75% ⭐,N/A,Neural Network
+Training Speed,Fast (< 1 min) ⭐,Moderate (2-5 min),Very Fast (< 10s) ⭐,K-Means
+Prediction Speed,Very Fast ⭐,Fast,Instant ⭐,K-Means
+Interpretability,High (8/10) ⭐,Low (4/10),Very High (10/10) ⭐,K-Means
+Deployment Ease,Easy ⭐,Moderate,Very Easy ⭐,K-Means
+Resource Requirements,Low ⭐,Moderate,Minimal ⭐,K-Means
+Maintenance Complexity,Simple ⭐,Complex,Very Simple ⭐,K-Means
+Total Cost of Ownership,Low ($9/10) ⭐,High ($6/10),Very Low ($10/10) ⭐,K-Means
+Stakeholder Trust,High (9/10) ⭐,Moderate (5/10),High (8/10),XGBoost
+Regulatory Compliance,High (9/10) ⭐,Moderate (5/10),Moderate (7/10),XGBoost
+Team Expertise Required,Moderate,High ⚠️,Low ⭐,K-Means
+Time to Production,1 week ⭐,2-3 weeks,Days ⭐,K-Means
+Scalability,Excellent,Good (with GPU),Excellent,Tie

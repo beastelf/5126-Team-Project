@@ -1,0 +1,9 @@
+Use Case,Recommended Model,Primary Reason,Deployment Time,Estimated Cost
+Large-Scale Production Winery,XGBoost,"Fast predictions, low cost, explainable",1 week,$5K setup + $1K/year
+Research & Development,Neural Network,"Flexibility, captures complex patterns",2-3 weeks,$15K setup + $5K/year
+Small Boutique Winery,XGBoost,"Easy implementation, minimal expertise",3-5 days,$3K setup + $500/year
+Quality Auditing & Compliance,XGBoost,"Transparent, feature importance, regulatory",1 week,$5K setup + $1K/year
+Customer Segmentation,K-Means,"Pattern discovery, not prediction",2-3 days,$1K setup + $200/year
+Real-time Quality Checks,XGBoost,Very fast prediction speed,1 week,$5K setup + $1K/year
+Cost-Constrained Deployment,K-Means (exploratory) or XGBoost,Lowest total cost of ownership,2-3 days,$1-3K setup + $200-500/year
+Maximum Accuracy Required,XGBoost,Highest F1 score (81.08%),1 week,$5K setup + $1K/year
