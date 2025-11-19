@@ -1,0 +1,4 @@
+Model,Type,Accuracy,Precision,Recall,F1 Score
+XGBoost,Supervised,0.7556,0.7934,0.8243,0.8085
+Neural Network (MLP),Supervised,0.7519,0.7769,0.8468,0.8103
+K-Means Clustering,Unsupervised,0.6259,0.6259,1.0000,0.7699
